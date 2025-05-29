@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "daSSHboard", "daSSHboard.csproj", "{F8DF3CBE-5682-4612-E7CB-0E87F3614C21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "daSSH", "daSSH.csproj", "{F8DF3CBE-5682-4612-E7CB-0E87F3614C21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
