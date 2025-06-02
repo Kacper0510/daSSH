@@ -1,0 +1,47 @@
+div.center-horizontal {
+    display: flex;
+    justify-content: center;
+}
+
+div.main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main.main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.darker-bg {
+    background-color: var(--md-sys-color-surface-container-low);
+}
+
+.margin {
+    margin: 3%;
+}
+
+a:link {
+    color: var(--md-extended-color-custom-color-color);
+}
+
+a:visited {
+    color: var(--md-extended-color-custom-color-color-container);
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-ref-typeface-brand);
+}
+
+:root {
+    --md-ref-typeface-brand: 'Montserrat';
+    --md-ref-typeface-plain: 'Montserrat';
+}

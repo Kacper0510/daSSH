@@ -23,8 +23,8 @@ builder.Services
     })
     .AddBearerToken(options => options.BearerTokenExpiration = TimeSpan.MaxValue)
     .AddDiscord(options => {
-        options.ClientId = Environment.GetEnvironmentVariable("DISCORD_CLIENT_ID") ?? "";
-        options.ClientSecret = Environment.GetEnvironmentVariable("DISCORD_SECRET") ?? "";
+        options.ClientId = Environment.GetEnvironmentVariable("DISCORD_CLIENT_ID") ?? "none";
+        options.ClientSecret = Environment.GetEnvironmentVariable("DISCORD_SECRET") ?? "none";
     });
 
 // Add services to the container.
