@@ -39,10 +39,13 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+using (var scope = app.Services.CreateScope()) {
+    scope.ServiceProvider.GetRequiredService<DatabaseContext>().Database.EnsureCreated();
+}
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+).WithStaticAssets();
 
 app.Run();
