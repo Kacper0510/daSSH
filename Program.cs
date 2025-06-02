@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using daSSH.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using AspNet.Security.OAuth.Discord;
 
+Directory.CreateDirectory("storage");
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DatabaseContextConnection")
@@ -10,10 +12,14 @@ var connectionString = builder.Configuration.GetConnectionString("DatabaseContex
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite(connectionString));
 
 builder.Services
-    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddAuthentication(options => {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = DiscordAuthenticationDefaults.AuthenticationScheme;
+    })
     .AddCookie(options => {
-        options.Cookie.Expiration = TimeSpan.FromHours(1);
-        options.Cookie.Name = "dassh_login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.Cookie.Name = "daSSH-login";
+        options.SlidingExpiration = true;
     })
     .AddBearerToken(options => options.BearerTokenExpiration = TimeSpan.MaxValue)
     .AddDiscord(options => {
@@ -35,6 +41,7 @@ if (!app.Environment.IsDevelopment()) {
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

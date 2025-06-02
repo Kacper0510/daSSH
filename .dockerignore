@@ -68,3 +68,7 @@ artifacts/
 # Database and persistent files
 storage/
 *.env
+
+# Docker excluded
+Dockerfile
+*.sln
