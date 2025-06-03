@@ -3,6 +3,12 @@ div.center-horizontal {
     justify-content: center;
 }
 
+div.center-vertical {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
 div.main {
     min-height: 100vh;
     display: flex;
@@ -18,6 +24,11 @@ main.main {
 
 .darker-bg {
     background-color: var(--md-sys-color-surface-container-low);
+}
+
+.discord-signin {
+    --md-filled-button-container-color: var(--md-extended-color-custom-color-color-container);
+    --md-filled-button-label-text-color: var(--md-extended-color-custom-color-on-color-container);
 }
 
 .margin {

@@ -17,7 +17,7 @@ builder.Services
         options.DefaultChallengeScheme = DiscordAuthenticationDefaults.AuthenticationScheme;
     })
     .AddCookie(options => {
-        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.ExpireTimeSpan = TimeSpan.FromHours(12);
         options.Cookie.Name = "daSSH-login";
         options.SlidingExpiration = true;
     })
@@ -34,7 +34,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Manage/Error");
     app.UseHsts();
 }
 
@@ -52,7 +52,12 @@ using (var scope = app.Services.CreateScope()) {
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"
+    pattern: "{action=Index}",
+    defaults: new { controller = "Default" }
+);
+app.MapControllerRoute(
+    name: "other",
+    pattern: "{controller}/{action}/{id?}"
 ).WithStaticAssets();
 
 app.Run();
