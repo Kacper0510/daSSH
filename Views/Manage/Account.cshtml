@@ -1,0 +1,41 @@
+@model User
+@{
+    ViewData["Title"] = "Account Settings";
+}
+
+<div class="flex-v min-tc">
+    <h2>Account Settings</h2>
+    <br>
+    <div class="flex-h">
+        <img src="@Model.Avatar" alt="Avatar" id="big-avatar" />
+        <div class="flex-v">
+            <p>Username: <strong>@Model.Username</strong></p>
+            <p>Discord ID: <strong>@Model.DiscordID</strong></p>
+            <p>Account since: <strong>@Model.CreatedOn.ToString("o")</strong></p>
+        </div>
+    </div>
+    <br>
+    <md-filled-button class="delete-button open-dialog" open-dialog="da">
+        Delete account
+        <md-icon slot="icon">delete_forever</md-icon>
+    </md-filled-button>
+    <md-dialog type="alert" id="da">
+        <div slot="headline">Confirm deletion</div>
+        <form slot="content" id="da-delete" method="post" action="/Manage/DeleteAccount">
+            Are you sure you wish to delete your account?
+            <br>
+            This action is irreversible and will delete all your data.
+        </form>
+        <form id="da-cancel" method="dialog" hidden></form>
+        <div slot="actions">
+            <md-filled-button form="da-cancel" value="cancel">
+                Cancel
+                <md-icon slot="icon">undo</md-icon>
+            </md-filled-button>
+            <md-filled-button form="da-delete" value="delete" class="delete-button">
+                Delete
+                <md-icon slot="icon">delete</md-icon>
+            </md-filled-button>
+        </div>
+    </md-dialog>
+</div>

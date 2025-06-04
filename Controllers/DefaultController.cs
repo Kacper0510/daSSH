@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using daSSH.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace daSSH.Controllers;
 
@@ -12,6 +13,9 @@ public class DefaultController(DatabaseContext db) : Controller {
     private readonly DatabaseContext _db = db;
 
     public IActionResult Index() {
+        if (User.FindFirst("daSSH-id") != null) {
+            return RedirectToAction("Instances", "Manage");
+        }
         return View();
     }
 
@@ -21,6 +25,7 @@ public class DefaultController(DatabaseContext db) : Controller {
         return Challenge(properties);
     }
 
+    [Authorize(AuthenticationSchemes = "Discord")]
     public async Task<IActionResult> SignInCallback() {
         var discordId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
         var username = User.FindFirstValue(ClaimTypes.Name) ?? "???";

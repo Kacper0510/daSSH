@@ -34,7 +34,7 @@
                             <img src="@avatar" alt="Account" class="round" />
                         </md-filled-tonal-icon-button>
                         <md-menu id="account-menu" anchor="account">
-                            <div class="small-margin">
+                            <div class="margin">
                                 Logged in as <strong>@User.FindFirstValue("daSSH-username")</strong>
                             </div>
                             <md-menu-item href="/Manage/Account">
@@ -48,7 +48,11 @@
                         </md-menu>
                     </span>
                 }
-                <h1 style="margin: 0 auto;">daSSH</h1>
+                <div id="title">
+                    <md-text-button href="/">
+                        <h1>daSSH</h1>
+                    </md-text-button>
+                </div>
                 <md-filled-tonal-icon-button id="theme-switcher">
                     <md-icon id="theme-switcher-icon">brightness_4</md-icon>
                 </md-filled-tonal-icon-button>

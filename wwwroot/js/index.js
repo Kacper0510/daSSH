@@ -41,3 +41,15 @@ if (accountButton) {
         menu.open = !menu.open;
     });
 }
+
+document.querySelectorAll(".open-dialog").forEach(button => {
+    button.addEventListener("click", async function() {
+        const dialogId = this.getAttribute("open-dialog");
+        const dialog = document.getElementById(dialogId);
+        if (dialog) {
+            await dialog.show();
+        } else {
+            console.error(`Dialog with ID ${dialogId} not found.`);
+        }
+    });
+});

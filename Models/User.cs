@@ -5,6 +5,7 @@ namespace daSSH.Models;
 public class User {
     public int UserID { get; set; }
     public long DiscordID { get; set; }
+    public DateOnly CreatedOn { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
     public required string Username { get; set; }
     public required string Avatar { get; set; }
     public required string PublicKey { get; set; }
