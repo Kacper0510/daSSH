@@ -33,3 +33,11 @@ document.querySelectorAll(".copy-button").forEach(button => {
         });
     });
 });
+
+const accountButton = document.getElementById("account");
+if (accountButton) {
+    accountButton.addEventListener("click", () => {
+        const menu = document.getElementById("account-menu");
+        menu.open = !menu.open;
+    });
+}

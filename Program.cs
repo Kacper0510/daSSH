@@ -24,6 +24,7 @@ builder.Services
         options.Cookie.Name = "daSSH-login";
         options.Cookie.HttpOnly = true;
         options.Cookie.IsEssential = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
         options.SlidingExpiration = true;
         options.LoginPath = "/SignIn";
     })

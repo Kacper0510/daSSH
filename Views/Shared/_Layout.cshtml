@@ -29,9 +29,24 @@
                         <md-icon>login</md-icon>
                     </md-filled-tonal-icon-button>
                 } else {
-                    <md-filled-tonal-icon-button id="account">
-                        <img src="@avatar" alt="Account" class="round" />
-                    </md-filled-tonal-icon-button>
+                    <span id="menu-span">
+                        <md-filled-tonal-icon-button id="account">
+                            <img src="@avatar" alt="Account" class="round" />
+                        </md-filled-tonal-icon-button>
+                        <md-menu id="account-menu" anchor="account">
+                            <div class="small-margin">
+                                Logged in as <strong>@User.FindFirstValue("daSSH-username")</strong>
+                            </div>
+                            <md-menu-item href="/Manage/Account">
+                                Settings
+                                <md-icon slot="start">manage_accounts</md-icon>
+                            </md-menu-item>
+                            <md-menu-item href="/SignOut">
+                                Sign Out
+                                <md-icon slot="start">logout</md-icon>
+                            </md-menu-item>
+                        </md-menu>
+                    </span>
                 }
                 <h1 style="margin: 0 auto;">daSSH</h1>
                 <md-filled-tonal-icon-button id="theme-switcher">

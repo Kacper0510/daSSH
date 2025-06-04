@@ -3,6 +3,7 @@ using System.Diagnostics;
 namespace daSSH.Data;
 
 public static class LinuxHelper {
+
     // See https://stackoverflow.com/a/31492250/23240713
     public static async Task<int> RunProcessAsync(string fileName, string args) {
         using var process = new Process {
@@ -19,9 +20,15 @@ public static class LinuxHelper {
     private static Task<int> RunProcessAsync(Process process) {
         var tcs = new TaskCompletionSource<int>();
 
+        static void ReceivedCallback(string? data, string prefix) {
+            data = data?.Trim();
+            if (!string.IsNullOrEmpty(data)) {
+                Console.WriteLine(prefix + data);
+            }
+        }
         process.Exited += (s, ea) => tcs.SetResult(process.ExitCode);
-        process.OutputDataReceived += (s, ea) => Console.WriteLine(ea.Data);
-        process.ErrorDataReceived += (s, ea) => Console.WriteLine("ERR: " + ea.Data);
+        process.OutputDataReceived += (s, ea) => ReceivedCallback(ea.Data, "PROCESS OUT: ");
+        process.ErrorDataReceived += (s, ea) => ReceivedCallback(ea.Data, "PROCESS ERR: ");
 
         bool started = process.Start();
         if (!started) {

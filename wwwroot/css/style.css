@@ -9,7 +9,7 @@ div.flex-v {
     flex-direction: column;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
     div.flex-d {
         display: flex;
         justify-content: center;
@@ -19,9 +19,15 @@ div.flex-v {
     .min-tc {
         min-width: 70vw;
     }
+
+    #account-menu {
+        position: fixed;
+        left: 0;
+        min-width: 100vw;
+    }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     div.flex-d {
         display: flex;
         justify-content: center;
@@ -29,6 +35,14 @@ div.flex-v {
 
     .min-tc {
         min-width: 35vw;
+    }
+
+    #account-menu {
+        min-width: 30vw;
+    }
+
+    #menu-span {
+        position: relative;
     }
 }
 
@@ -63,6 +77,10 @@ main.main {
 
 .margin {
     margin: 3%;
+}
+
+.small-margin {
+    margin: 1%;
 }
 
 a:link {
