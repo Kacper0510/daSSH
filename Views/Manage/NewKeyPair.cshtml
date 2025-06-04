@@ -1,0 +1,40 @@
+@model string?
+@{
+    ViewData["Title"] = "New Key Pair";
+}
+
+<div class="flex-v">
+    <h2>A new key pair has been generated for you.</h2>
+    <br>
+    @if (Model == null) {
+        <p>
+            ... or was it? Something went wrong while generating the key pair.
+            Please try again later or contact support if the problem persists.
+        </p>
+    } else {
+        <p>
+            Please copy the private key and store it in a safe place. You will not be able to retrieve it again.
+        </p>
+        <br>
+        <details>
+            <summary>Click to reveal key contents</summary>
+            <pre id="copy-content">@Model</pre>
+        </details>
+        <br>
+        <md-filled-tonal-button class="copy-button">
+            <div id="copy-text">Copy to clipboard</div>
+            <md-icon slot="icon">content_copy</md-icon>
+        </md-filled-tonal-button>
+        <br>
+        <p>
+            You can now use this key pair to authenticate with the server.
+        </p>
+        <p>
+            If you need to generate yet another key pair, or you want to upload an existing key, you can do so from your account page.
+        </p>
+    }
+    <br>
+    <md-filled-button href="/Manage/Instances">
+        Go to dashboard
+    </md-filled-button>
+</div>

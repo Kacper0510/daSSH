@@ -20,7 +20,6 @@ public class ManageController(DatabaseContext db) : Controller {
     }
 
     public IActionResult NewKeyPair() {
-        // TODO show the key
-        return RedirectToAction("Instances", "Manage");
+        return View(model: User.FindFirstValue("daSSH-private-key"));
     }
 }

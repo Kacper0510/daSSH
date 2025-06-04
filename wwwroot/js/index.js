@@ -19,3 +19,17 @@ document.getElementById("theme-switcher").addEventListener("click", function() {
     const currentTheme = localStorage.getItem(THEME_KEY);
     switchTheme(oppositeTheme(currentTheme));
 });
+
+document.querySelectorAll(".copy-button").forEach(button => {
+    button.addEventListener("click", function() {
+        const code = document.getElementById("copy-content").innerHTML;
+        navigator.clipboard.writeText(code).then(() => {
+            document.getElementById("copy-text").innerHTML = "Copied!";
+            setTimeout(() => {
+                document.getElementById("copy-text").innerHTML = "Copy to clipboard";
+            }, 1000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    });
+});

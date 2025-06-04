@@ -38,7 +38,7 @@ public class DefaultController(DatabaseContext db) : Controller {
                 Avatar = avatarURL,
                 PublicKey = "",
             };
-            privKey = user.GenerateNewKeyPair();
+            privKey = await user.GenerateNewKeyPair();
             _db.Users.Add(user);
         } else {
             user.Username = username;

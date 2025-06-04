@@ -1,3 +1,5 @@
+using daSSH.Data;
+
 namespace daSSH.Models;
 
 public class User {
@@ -11,8 +13,9 @@ public class User {
     public ICollection<Instance> Instances { get; set; } = [];
     public ICollection<Instance> SharedInstances { get; set; } = [];
 
-    public string GenerateNewKeyPair() {
-        PublicKey = "pubkey";
-        return "privkey";
+    public async Task<string> GenerateNewKeyPair() {
+        var (pub, priv) = await SSH.RunKeyGen(UserID);
+        PublicKey = pub;
+        return priv;
     }
 }

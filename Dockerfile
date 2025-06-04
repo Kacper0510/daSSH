@@ -7,7 +7,8 @@ RUN dotnet publish -c release -o /app --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine
 RUN apk add --no-cache \
-    bash
+    bash \
+    openssh
 WORKDIR /app
 VOLUME /app/storage
 EXPOSE 8080
