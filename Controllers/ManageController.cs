@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using daSSH.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace daSSH.Controllers;
@@ -9,5 +7,10 @@ namespace daSSH.Controllers;
 public class ManageController : Controller {
     public IActionResult Instances() {
         return View();
+    }
+
+    public IActionResult NewKeyPair() {
+        // TODO show the key
+        return RedirectToAction("Instances", "Manage");
     }
 }

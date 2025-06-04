@@ -8,6 +8,11 @@ public class User {
     public required string PublicKey { get; set; }
     public string? APIToken { get; set; }
 
-    public required ICollection<Instance> Instances { get; set; }
-    public required ICollection<Instance> SharedInstances { get; set; }
+    public ICollection<Instance> Instances { get; set; } = [];
+    public ICollection<Instance> SharedInstances { get; set; } = [];
+
+    public string GenerateNewKeyPair() {
+        PublicKey = "pubkey";
+        return "privkey";
+    }
 }

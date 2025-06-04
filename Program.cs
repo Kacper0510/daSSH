@@ -17,8 +17,10 @@ builder.Services
         options.DefaultChallengeScheme = DiscordAuthenticationDefaults.AuthenticationScheme;
     })
     .AddCookie(options => {
-        options.ExpireTimeSpan = TimeSpan.FromHours(12);
+        options.ExpireTimeSpan = TimeSpan.FromDays(30);
         options.Cookie.Name = "daSSH-login";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
         options.SlidingExpiration = true;
     })
     .AddBearerToken(options => options.BearerTokenExpiration = TimeSpan.MaxValue)
@@ -38,7 +40,6 @@ if (!app.Environment.IsDevelopment()) {
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
