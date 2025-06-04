@@ -1,9 +1,45 @@
+@model User
 @{
     ViewData["Title"] = "Manage Instances";
 }
 
-<div class="center-vertical">
-    <h1>Welcome to <b>daSSH</b>!</h1>
-    <br>
-    <h2>@User.FindFirstValue("daSSH-username") with ID @User.FindFirstValue("daSSH-id")</h2>
+<div class="flex-d">
+    <div class="flex-v margin min-tc">
+        <h2>Your Instances</h2>
+        <md-list>
+            <md-divider></md-divider>
+            @foreach (var instance in Model.Instances) {
+                <md-list-item>
+                    <md-icon slot="start">screen_share</md-icon>
+                    <div slot="headline">@instance.Name</div>
+                </md-list-item>
+                <md-divider></md-divider>
+            }
+            <md-list-item>
+                <md-icon slot="start">add</md-icon>
+                <div slot="headline">Create new...</div>
+            </md-list-item>
+            <md-divider></md-divider>
+        </md-list>
+    </div>
+    <div class="flex-v margin min-tc">
+        <h2>Shared Instances</h2>
+        <md-list>
+            <md-divider></md-divider>
+            @if (Model.SharedInstances.Count == 0) {
+                <md-list-item>
+                    <md-icon slot="start">info</md-icon>
+                    <div slot="headline">No shared instances.</div>
+                </md-list-item>
+                <md-divider></md-divider>
+            }
+            @foreach (var instance in Model.SharedInstances){
+                <md-list-item>
+                    <md-icon slot="start">folder_shared</md-icon>
+                    <div slot="headline">@instance.Name</div>
+                </md-list-item>
+                <md-divider></md-divider>
+            }
+        </md-list>
+    </div>
 </div>

@@ -1,12 +1,42 @@
-div.center-horizontal {
+div.flex-h {
     display: flex;
     justify-content: center;
 }
 
-div.center-vertical {
+div.flex-v {
     display: flex;
     justify-content: center;
     flex-direction: column;
+}
+
+@media (max-width: 767px) {
+    div.flex-d {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .min-tc {
+        min-width: 70vw;
+    }
+}
+
+@media (min-width: 768px) {
+    div.flex-d {
+        display: flex;
+        justify-content: center;
+    }
+
+    .min-tc {
+        min-width: 35vw;
+    }
+}
+
+img.round {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 div.main {
@@ -43,6 +73,11 @@ a:visited {
     color: var(--md-extended-color-custom-color-color-container);
 }
 
+header {
+    --md-filled-tonal-icon-button-container-width: 48px;
+    --md-filled-tonal-icon-button-container-height: 48px;
+}
+
 html,
 body {
     height: 100%;
@@ -50,6 +85,8 @@ body {
     background-color: var(--md-sys-color-surface-container-high);
     color: var(--md-sys-color-on-surface);
     font-family: var(--md-ref-typeface-brand);
+    text-align: center;
+    --md-list-container-color: var(--md-sys-color-surface-container-high);
 }
 
 :root {

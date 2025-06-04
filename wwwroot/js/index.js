@@ -1,16 +1,21 @@
 const THEME_KEY = "daSSH-theme";
 
+const oppositeTheme = (theme) => theme === "dark" ? "light" : "dark";
+
+function switchTheme(theme) {
+    document.body.classList.remove("light", "dark");
+    document.body.classList.add(theme);
+    localStorage.setItem(THEME_KEY, theme);
+    document.getElementById("theme-switcher-icon").innerHTML = oppositeTheme(theme) + "_mode";
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
     const currentTheme = localStorage.getItem(THEME_KEY) || (prefersDarkScheme.matches ? "dark" : "light");
-    document.body.classList.add(currentTheme);
-    localStorage.setItem(THEME_KEY, currentTheme);
+    switchTheme(currentTheme);
 });
 
 document.getElementById("theme-switcher").addEventListener("click", function() {
     const currentTheme = localStorage.getItem(THEME_KEY);
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-    document.body.classList.remove(currentTheme);
-    document.body.classList.add(newTheme);
-    localStorage.setItem(THEME_KEY, newTheme);
+    switchTheme(oppositeTheme(currentTheme));
 });

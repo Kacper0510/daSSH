@@ -9,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DatabaseContextConnection")
     ?? throw new InvalidOperationException("Connection string 'DatabaseContextConnection' not found.");
 
-builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite(
+    connectionString,
+    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+));
 
 builder.Services
     .AddAuthentication(options => {
@@ -22,6 +25,7 @@ builder.Services
         options.Cookie.HttpOnly = true;
         options.Cookie.IsEssential = true;
         options.SlidingExpiration = true;
+        options.LoginPath = "/SignIn";
     })
     .AddBearerToken(options => options.BearerTokenExpiration = TimeSpan.MaxValue)
     .AddDiscord(options => {

@@ -22,10 +22,21 @@
 <body>
     <div class="main">
         <header class="darker-bg">
-            <div class="center-horizontal margin">
-                <md-filled-tonal-button id="theme-switcher">Theme</md-filled-tonal-button>
+            <div class="flex-h margin">
+                @{var avatar = User.FindFirstValue("daSSH-avatar");}
+                @if (avatar == null) {
+                    <md-filled-tonal-icon-button href="/SignIn">
+                        <md-icon>login</md-icon>
+                    </md-filled-tonal-icon-button>
+                } else {
+                    <md-filled-tonal-icon-button id="account">
+                        <img src="@avatar" alt="Account" class="round" />
+                    </md-filled-tonal-icon-button>
+                }
                 <h1 style="margin: 0 auto;">daSSH</h1>
-                <md-filled-tonal-button id="account">Acc</md-filled-tonal-button>
+                <md-filled-tonal-icon-button id="theme-switcher">
+                    <md-icon id="theme-switcher-icon">brightness_4</md-icon>
+                </md-filled-tonal-icon-button>
             </div>
         </header>
 
@@ -34,7 +45,7 @@
         </main>
 
         <footer class="darker-bg">
-            <div class="center-horizontal margin">
+            <div class="flex-h margin">
                 &copy; 2025 Kacper0510 - daSSH -&nbsp; <a href="https://github.com/Kacper0510/daSSH">GitHub</a>
             </div>
         </footer>
