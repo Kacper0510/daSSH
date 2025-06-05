@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using daSSH.Data;
 
 namespace daSSH.Models;
@@ -18,5 +19,12 @@ public class User {
         var (pub, priv) = await SSH.RunKeyGen(UserID);
         PublicKey = pub;
         return priv;
+    }
+
+    public void GenerateNewToken() {
+        byte[] tokenBytes = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(tokenBytes);
+        APIToken = "daSSH-" + Convert.ToBase64String(tokenBytes);
     }
 }

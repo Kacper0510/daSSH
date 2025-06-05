@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace daSSH.Controllers;
 
-public class DefaultController(DatabaseContext db) : Controller {
-    private readonly DatabaseContext _db = db;
-
+public class DefaultController(DatabaseContext db) : ControllerExt(db) {
     public IActionResult Index() {
         if (User.FindFirst("daSSH-id") != null) {
             return RedirectToAction("Instances", "Manage");
@@ -25,6 +23,10 @@ public class DefaultController(DatabaseContext db) : Controller {
         return Challenge(properties);
     }
 
+    public IActionResult Manage() {
+        return RedirectToActionPermanent("Instances", "Manage");
+    }
+
     [Authorize(AuthenticationSchemes = "Discord")]
     public async Task<IActionResult> SignInCallback() {
         var discordId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
@@ -34,38 +36,25 @@ public class DefaultController(DatabaseContext db) : Controller {
             ? $"https://cdn.discordapp.com/embed/avatars/{(discordId >> 22) % 6}.png"
             : $"https://cdn.discordapp.com/avatars/{discordId}/{avatar}.png";
 
-        string? privKey = null;
         var user = await _db.Users.FirstOrDefaultAsync(u => u.DiscordID == discordId);
-        if (user == null) {
+        var newAccount = user == null;
+        if (newAccount) {
             user = new User {
                 DiscordID = discordId,
                 Username = username,
                 Avatar = avatarURL,
                 PublicKey = "",
             };
-            privKey = await user.GenerateNewKeyPair();
             _db.Users.Add(user);
         } else {
-            user.Username = username;
-            user.Avatar = avatarURL;
+            user!.Username = username;
+            user!.Avatar = avatarURL;
         }
         await _db.SaveChangesAsync();
 
-        var claims = new List<Claim> {
-            new("daSSH-id", user.UserID.ToString()),
-            new("daSSH-username", username),
-            new("daSSH-avatar", avatarURL),
-        };
-        if (privKey != null) {
-            claims.Add(new("daSSH-private-key", privKey));
-        }
-        var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-        await HttpContext.SignInAsync("Cookies", claimsPrincipal, new AuthenticationProperties {
-            IsPersistent = true,
-            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
-        });
-        return RedirectToAction(privKey == null ? "Instances" : "NewKeyPair", "Manage");
+        await ReissueCookie(user.UserID, user.Username, user.Avatar);
+
+        return RedirectToAction(newAccount ? "RegenerateKeyPair" : "Instances", "Manage");
     }
 
     [ActionName("SignOut")]

@@ -3,39 +3,126 @@
     ViewData["Title"] = "Account Settings";
 }
 
-<div class="flex-v min-tc">
-    <h2>Account Settings</h2>
-    <br>
-    <div class="flex-h">
-        <img src="@Model.Avatar" alt="Avatar" id="big-avatar" />
-        <div class="flex-v">
-            <p>Username: <strong>@Model.Username</strong></p>
-            <p>Discord ID: <strong>@Model.DiscordID</strong></p>
-            <p>Account since: <strong>@Model.CreatedOn.ToString("o")</strong></p>
+<div class="flex-d">
+    <div class="flex-v margin min-tc">
+        <h2>Account Settings</h2>
+        <br>
+        <div class="flex-h">
+            <img src="@Model.Avatar" alt="Avatar" id="big-avatar" />
+            <div class="flex-v">
+                <p>Username: <strong>@Model.Username</strong></p>
+                <p>Discord ID: <strong>@Model.DiscordID</strong></p>
+                <p>Account since: <strong>@Model.CreatedOn.ToString("o")</strong></p>
+            </div>
         </div>
+        <br>
+        <md-filled-button class="small-margin delete-button open-dialog" open-dialog="da">
+            Delete account
+            <md-icon slot="icon">delete_forever</md-icon>
+        </md-filled-button>
+        <md-dialog type="alert" id="da">
+            <div slot="headline">Confirm deletion</div>
+            <form slot="content" id="da-delete" method="post" action="/Manage/DeleteAccount">
+                Are you sure you wish to delete your account?
+                <br>
+                This action is irreversible and will delete all your data.
+            </form>
+            <form id="da-cancel" method="dialog" hidden></form>
+            <div slot="actions">
+                <md-filled-button form="da-cancel">
+                    Cancel
+                    <md-icon slot="icon">undo</md-icon>
+                </md-filled-button>
+                <md-filled-button form="da-delete" class="delete-button">
+                    Delete
+                    <md-icon slot="icon">delete</md-icon>
+                </md-filled-button>
+            </div>
+        </md-dialog>
     </div>
-    <br>
-    <md-filled-button class="delete-button open-dialog" open-dialog="da">
-        Delete account
-        <md-icon slot="icon">delete_forever</md-icon>
-    </md-filled-button>
-    <md-dialog type="alert" id="da">
-        <div slot="headline">Confirm deletion</div>
-        <form slot="content" id="da-delete" method="post" action="/Manage/DeleteAccount">
-            Are you sure you wish to delete your account?
+    <div class="flex-v margin min-tc">
+        <h2>SSH Key Pair</h2>
+        <br>
+        <p>Your current public key:</p>
+        <pre>@Model.PublicKey</pre>
+        <md-filled-tonal-button class="small-margin open-dialog" open-dialog="rk">
+            Regenerate key pair
+            <md-icon slot="icon">key_off</md-icon>
+        </md-filled-tonal-button>
+        <md-dialog type="alert" id="rk">
+            <div slot="headline">Regenerate key pair</div>
+            <form slot="content" id="rk-proceed" method="get" action="/Manage/RegenerateKeyPair">
+                Are you sure you want to regenerate your SSH key pair?
+                <br>
+                This will invalidate your current key and generate a new one.
+            </form>
+            <form id="rk-cancel" method="dialog" hidden></form>
+            <div slot="actions">
+                <md-filled-button form="rk-cancel">
+                    Cancel
+                    <md-icon slot="icon">undo</md-icon>
+                </md-filled-button>
+                <md-filled-button form="rk-proceed" class="delete-button">
+                    Regenerate
+                    <md-icon slot="icon">key</md-icon>
+                </md-filled-button>
+            </div>
+        </md-dialog>
+
+        <h2>API Bearer Token</h2>
+        <br>
+        @if (Model.APIToken != null) {
+            <md-filled-tonal-button class="small-margin open-dialog" open-dialog="rt">
+                Regenerate API token
+                <md-icon slot="icon">token</md-icon>
+            </md-filled-tonal-button>
+            <md-dialog type="alert" id="rt">
+                <div slot="headline">Regenerate token</div>
+                <form slot="content" id="rt-proceed" method="get" action="/Manage/GenerateToken">
+                    Are you sure you want to regenerate your API token?
+                    <br>
+                    This will revoke your current token and generate a new one.
+                </form>
+                <form id="rt-cancel" method="dialog" hidden></form>
+                <div slot="actions">
+                    <md-filled-button form="rt-cancel">
+                        Cancel
+                        <md-icon slot="icon">undo</md-icon>
+                    </md-filled-button>
+                    <md-filled-button form="rt-proceed" class="delete-button">
+                        Regenerate
+                        <md-icon slot="icon">settings_backup_restore</md-icon>
+                    </md-filled-button>
+                </div>
+            </md-dialog>
             <br>
-            This action is irreversible and will delete all your data.
-        </form>
-        <form id="da-cancel" method="dialog" hidden></form>
-        <div slot="actions">
-            <md-filled-button form="da-cancel" value="cancel">
-                Cancel
-                <md-icon slot="icon">undo</md-icon>
-            </md-filled-button>
-            <md-filled-button form="da-delete" value="delete" class="delete-button">
-                Delete
+            <md-filled-button class="small-margin delete-button open-dialog" open-dialog="dt">
+                Delete API token
                 <md-icon slot="icon">delete</md-icon>
             </md-filled-button>
-        </div>
-    </md-dialog>
+            <md-dialog type="alert" id="dt">
+                <div slot="headline">Delete token</div>
+                <form slot="content" id="dt-proceed" method="post" action="/Manage/DeleteToken">
+                    Are you sure you want to delete your API token?
+                </form>
+                <form id="dt-cancel" method="dialog" hidden></form>
+                <div slot="actions">
+                    <md-filled-button form="dt-cancel">
+                        Cancel
+                        <md-icon slot="icon">undo</md-icon>
+                    </md-filled-button>
+                    <md-filled-button form="dt-proceed" class="delete-button">
+                        Delete
+                        <md-icon slot="icon">delete</md-icon>
+                    </md-filled-button>
+                </div>
+            </md-dialog>
+        } else {
+            <p>You do not have an API token. You can generate one below.</p>
+            <md-filled-tonal-button class="small-margin open-dialog" href="/Manage/GenerateToken">
+                Generate API token
+                <md-icon slot="icon">token</md-icon>
+            </md-filled-tonal-button>
+        }
+    </div>
 </div>

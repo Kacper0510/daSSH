@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using daSSH.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using AspNet.Security.OAuth.Discord;
+using Microsoft.AspNetCore.Authentication;
 
 Directory.CreateDirectory("storage");
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +29,11 @@ builder.Services
         options.SlidingExpiration = true;
         options.LoginPath = "/SignIn";
     })
-    .AddBearerToken(options => options.BearerTokenExpiration = TimeSpan.MaxValue)
     .AddDiscord(options => {
         options.ClientId = Environment.GetEnvironmentVariable("DISCORD_CLIENT_ID") ?? "none";
         options.ClientSecret = Environment.GetEnvironmentVariable("DISCORD_SECRET") ?? "none";
-    });
+    })
+    .AddScheme<AuthenticationSchemeOptions, CustomBearerTokenHandler>("Bearer", options => {});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

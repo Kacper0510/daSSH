@@ -1,0 +1,37 @@
+@model string?
+@{
+    ViewData["Title"] = "New API Token";
+}
+
+<div class="flex-v">
+    <h2>A new API Bearer token has been generated for you.</h2>
+    <br>
+    @if (Model == null) {
+        <p>
+            ... or was it? Something went wrong while generating the token.
+            Please try again later or contact support if the problem persists.
+        </p>
+    } else {
+        <p>
+            Please copy the token and store it in a safe place. You will not be able to retrieve it again.
+        </p>
+        <br>
+        <details class="small-margin">
+            <summary>Click to reveal token</summary>
+            <pre id="copy-content">@Model</pre>
+        </details>
+        <br>
+        <md-filled-tonal-button class="copy-button">
+            <div id="copy-text">Copy to clipboard</div>
+            <md-icon slot="icon">content_copy</md-icon>
+        </md-filled-tonal-button>
+        <br>
+        <p>
+            You can now use this token to authenticate with the API.
+        </p>
+    }
+    <br>
+    <md-filled-button href="/Manage/Instances">
+        Go to dashboard
+    </md-filled-button>
+</div>
