@@ -35,7 +35,6 @@ builder.Services
     })
     .AddScheme<AuthenticationSchemeOptions, CustomBearerTokenHandler>("Bearer", options => {});
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

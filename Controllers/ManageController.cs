@@ -4,6 +4,7 @@ using daSSH.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using daSSH.Models;
 
 namespace daSSH.Controllers;
 
@@ -19,9 +20,6 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
     }
 
     public IActionResult NewKeyPair() {
-        foreach (var i in User.Identities) {
-            Console.WriteLine($"{i.AuthenticationType} - {string.Join(',', i.Claims.Select(c => $"{c.Type}={c.Value}"))}");
-        }
         return View(model: User.FindFirstValue("daSSH-private-key"));
     }
 
@@ -99,5 +97,35 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
         );
 
         return RedirectToAction("NewToken");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateInstance(string name, bool forward, ushort port, bool publicPort) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _db.Users
+            .FirstOrDefaultAsync(u => u.UserID == UserID());
+        if (user == null) {
+            return NotFound();
+        }
+
+        var instance = new Instance {
+            Name = name,
+            Owner = user,
+        };
+        _db.Instances.Add(instance);
+        if (forward) {
+            var portForward = new PortForward {
+                Port = port,
+                Public = publicPort,
+                Instance = instance
+            };
+            _db.Forwards.Add(portForward);
+        }
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction("Instances");
     }
 }

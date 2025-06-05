@@ -8,7 +8,8 @@
         <h2>Your Instances</h2>
         <md-list>
             <md-divider></md-divider>
-            @foreach (var instance in Model.Instances) {
+            @foreach (var instance in Model.Instances)
+            {
                 <md-list-item>
                     <md-icon slot="start">screen_share</md-icon>
                     <div slot="headline">@instance.Name</div>
@@ -18,7 +19,62 @@
             <md-list-item>
                 <md-icon slot="start">add</md-icon>
                 <div slot="headline">Create new...</div>
+                <md-filled-tonal-icon-button class="open-dialog" open-dialog="ci" slot="end">
+                    <md-icon>create_new_folder</md-icon>
+                </md-filled-tonal-icon-button>
             </md-list-item>
+            <md-dialog type="alert" id="ci">
+                <div slot="headline">New instance parameters</div>
+                <form slot="content" id="ci-proceed" method="post" action="/Manage/CreateInstance">
+                    <div class="flex-v">
+                        <md-outlined-text-field
+                            label="Name"
+                            name="name"
+                            required
+                            maxlength="30"
+                            minlength="1"
+                            pattern="^[a-zA-Z0-9_ ]+$"
+                            class="margin"
+                            helper-text="Only alphanumeric characters, spaces, and underscores are allowed.">
+                        </md-outlined-text-field>
+                        <div class="flex-h margin">
+                            <label for="forward" class="margin">Port forwarding</label>
+                            <md-switch id="forward" value="forward" class="switch-hidden" switch-hidden="pfw-options">
+                            </md-switch>
+                        </div>
+                        <div id="pfw-options" hidden>
+                            <div class="flex-v">
+                                <md-outlined-text-field
+                                    label="Port"
+                                    name="port"
+                                    required
+                                    type="number"
+                                    value="20000"
+                                    min="2000"
+                                    class="margin"
+                                    max="@ushort.MaxValue">
+                                </md-outlined-text-field>
+                                <div class="flex-h margin">
+                                    <label for="public-port" class="margin">Public port</label>
+                                    <md-switch id="public-port" value="publicPort">
+                                    </md-switch>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form id="ci-cancel" method="dialog" hidden></form>
+                <div slot="actions">
+                    <md-outlined-button form="ci-cancel">
+                        Cancel
+                        <md-icon slot="icon">undo</md-icon>
+                    </md-outlined-button>
+                    <md-filled-button form="ci-proceed">
+                        Create
+                        <md-icon slot="icon">create_new_folder</md-icon>
+                    </md-filled-button>
+                </div>
+            </md-dialog>
             <md-divider></md-divider>
         </md-list>
     </div>
@@ -26,14 +82,16 @@
         <h2>Shared Instances</h2>
         <md-list>
             <md-divider></md-divider>
-            @if (Model.SharedInstances.Count == 0) {
+            @if (Model.SharedInstances.Count == 0)
+            {
                 <md-list-item>
                     <md-icon slot="start">info</md-icon>
                     <div slot="headline">No shared instances.</div>
                 </md-list-item>
                 <md-divider></md-divider>
             }
-            @foreach (var instance in Model.SharedInstances){
+            @foreach (var instance in Model.SharedInstances)
+            {
                 <md-list-item>
                     <md-icon slot="start">folder_shared</md-icon>
                     <div slot="headline">@instance.Name</div>

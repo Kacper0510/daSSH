@@ -53,3 +53,15 @@ document.querySelectorAll(".open-dialog").forEach(button => {
         }
     });
 });
+
+document.querySelectorAll(".switch-hidden").forEach(button => {
+    button.addEventListener("change", async function() {
+        const dialogId = this.getAttribute("switch-hidden");
+        const dialog = document.getElementById(dialogId);
+        if (dialog) {
+            dialog.hidden = !dialog.hidden;
+        } else {
+            console.error(`Element with ID ${dialogId} not found.`);
+        }
+    });
+});
