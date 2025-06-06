@@ -115,7 +115,7 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
             Name = name,
             Owner = user,
         };
-        _db.Instances.Add(instance);
+        _db.Instances.Add(instance);  // todo fix ports
         if (forward) {
             var portForward = new PortForward {
                 Port = port,
@@ -126,6 +126,213 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
         }
         await _db.SaveChangesAsync();
 
+        return RedirectToAction("Instance", new { id = instance.InstanceID });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteInstance(int id) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _db.Users
+            .Include(u => u.Instances)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.UserID == UserID());
+        if (user == null) {
+            return NotFound();
+        }
+        if (!user.Instances.Any(i => i.InstanceID == id)) {
+            return BadRequest("You do not own this instance.");
+        }
+
+        var instance = await _db.Instances
+            .AsNoTracking()
+            .FirstOrDefaultAsync(i => i.InstanceID == id);
+        if (instance == null) {
+            return NotFound();
+        }
+
+        _db.Instances.Remove(instance);
+        await _db.SaveChangesAsync();
         return RedirectToAction("Instances");
+    }
+
+    public async Task<IActionResult> Instance(int id) {
+        if (!ModelState.IsValid) {
+            return NotFound(ModelState);
+        }
+
+        var user = await _db.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.UserID == UserID());
+        if (user == null) {
+            return NotFound();
+        }
+
+        var instance = await _db.Instances
+            .Include(i => i.PortForward)
+            .Include(i => i.Owner)
+            .Include(i => i.SharedUsers)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(i => i.InstanceID == id);
+        if (instance == null) {
+            return NotFound();
+        }
+
+        if (instance.Owner.UserID != user.UserID && !instance.SharedUsers.Any(u => u.UserID == user.UserID)) {
+            return BadRequest("You do not have access to this instance.");
+        }
+        var isShared = instance.Owner.UserID != user.UserID;
+
+        return View((instance, isShared));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditInstance(int id, string name, bool forward, ushort port, bool publicPort) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _db.Users
+            .Include(u => u.Instances)
+            .FirstOrDefaultAsync(u => u.UserID == UserID());
+        if (user == null) {
+            return NotFound();
+        }
+        if (!user.Instances.Any(i => i.InstanceID == id)) {
+            return BadRequest("You do not own this instance.");
+        }
+
+        var instance = await _db.Instances
+            .Include(i => i.PortForward)
+            .FirstOrDefaultAsync(i => i.InstanceID == id);
+        if (instance == null) {
+            return NotFound();
+        }
+
+        instance.Name = name;
+        if (forward) {
+            if (instance.PortForward == null) {
+                var portForward = new PortForward {
+                    Port = port,
+                    Public = publicPort,
+                    Instance = instance
+                };
+                _db.Forwards.Add(portForward);
+            } else {
+                instance.PortForward.Port = port;
+                instance.PortForward.Public = publicPort;
+            }
+        } else if (instance.PortForward != null) {
+            _db.Forwards.Remove(instance.PortForward);
+        }
+        await _db.SaveChangesAsync();
+
+        return RedirectToAction("Instance", new { id });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddShare(int instance, string username) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _db.Users
+            .Include(u => u.Instances)
+            .FirstOrDefaultAsync(u => u.UserID == UserID());
+        if (user == null) {
+            return NotFound();
+        }
+        if (!user.Instances.Any(i => i.InstanceID == instance)) {
+            return BadRequest("You do not own this instance.");
+        }
+
+        var targetUser = await _db.Users
+            .FirstOrDefaultAsync(u => u.Username == username);
+        if (targetUser == null) {
+            return NotFound();
+        }  // TODO handle case where targetUser is the same as user
+
+        var targetInstance = await _db.Instances
+            .FirstOrDefaultAsync(i => i.InstanceID == instance);
+        if (targetInstance == null) {
+            return NotFound();
+        }
+
+        if (!targetInstance.SharedUsers.Any(u => u.UserID == targetUser.UserID)) {
+            targetInstance.SharedUsers.Add(targetUser);
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction("Instance", new { id = instance });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RemoveShare(int instance, string username) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _db.Users
+            .Include(u => u.Instances)
+            .FirstOrDefaultAsync(u => u.UserID == UserID());
+        if (user == null) {
+            return NotFound();
+        }
+        if (!user.Instances.Any(i => i.InstanceID == instance)) {
+            return BadRequest("You do not own this instance.");
+        }
+
+        var targetUser = await _db.Users
+            .FirstOrDefaultAsync(u => u.Username == username);
+        if (targetUser == null) {
+            return NotFound();
+        }
+
+        var targetInstance = await _db.Instances
+            .FirstOrDefaultAsync(i => i.InstanceID == instance);
+        if (targetInstance == null) {
+            return NotFound();
+        }
+
+        if (targetInstance.SharedUsers.Any(u => u.UserID == targetUser.UserID)) {  // todo check
+            targetInstance.SharedUsers.Remove(targetUser);
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction("Instance", new { id = instance });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> LeaveInstance(int id) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        var user = await _db.Users
+            .Include(u => u.SharedInstances)
+            .FirstOrDefaultAsync(u => u.UserID == UserID());
+        if (user == null) {
+            return NotFound();
+        }
+        var instance = await _db.Instances
+            .FirstOrDefaultAsync(i => i.InstanceID == id);
+        if (instance == null) {
+            return NotFound();
+        }
+        if (!user.SharedInstances.Any(i => i.InstanceID == id)) {
+            return BadRequest("You do not have access to this instance.");
+        }
+
+        instance.SharedUsers.Remove(user);
+        await _db.SaveChangesAsync();
+        return RedirectToAction("Instances");
+    }
+
+    public IActionResult Files(int id) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        return View(id);
     }
 }

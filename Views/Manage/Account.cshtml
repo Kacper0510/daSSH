@@ -12,7 +12,7 @@
             <div class="flex-v">
                 <p>Username: <strong>@Model.Username</strong></p>
                 <p>Discord ID: <strong>@Model.DiscordID</strong></p>
-                <p>Account since: <strong>@Model.CreatedOn.ToString("o")</strong></p>
+                <p>Account since: <strong>@Model.CreatedOn.ToString("u")</strong></p>
             </div>
         </div>
         <br>
@@ -71,7 +71,8 @@
 
         <h2>API Bearer Token</h2>
         <br>
-        @if (Model.APIToken != null) {
+        @if (Model.APIToken != null)
+        {
             <md-filled-tonal-button class="small-margin open-dialog" open-dialog="rt">
                 Regenerate API token
                 <md-icon slot="icon">token</md-icon>
@@ -117,7 +118,9 @@
                     </md-filled-button>
                 </div>
             </md-dialog>
-        } else {
+        }
+        else
+        {
             <p>You do not have an API token. You can generate one below.</p>
             <md-filled-tonal-button class="small-margin open-dialog" href="/Manage/GenerateToken">
                 Generate API token
