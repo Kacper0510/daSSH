@@ -252,7 +252,7 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
         var targetUser = await _db.Users
             .FirstOrDefaultAsync(u => u.Username == username);
         if (targetUser == null) {
-            return NotFound();
+            return RedirectToAction("Instance", new { id = instance });
         }  // TODO handle case where targetUser is the same as user
 
         var targetInstance = await _db.Instances
@@ -288,7 +288,7 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
         var targetUser = await _db.Users
             .FirstOrDefaultAsync(u => u.Username == username);
         if (targetUser == null) {
-            return NotFound();
+            return RedirectToAction("Instance", new { id = instance });
         }
 
         var targetInstance = await _db.Instances

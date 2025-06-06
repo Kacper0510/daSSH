@@ -67,7 +67,7 @@
                             minlength="1"
                             pattern="^[a-zA-Z0-9_ ]+$"
                             class="margin"
-                            helper-text="Only alphanumeric characters, spaces, and underscores are allowed.">
+                            supporting-text="Only alphanumeric characters, spaces, and underscores are allowed.">
                         </md-outlined-text-field>
                         @{
                             var hide = instance.PortForward == null ? "hidden" : "";
@@ -189,11 +189,18 @@
                         <md-icon>share</md-icon>
                     </md-filled-tonal-icon-button>
                 </md-list-item>
+                <md-divider></md-divider>
                 <md-dialog type="alert" id="au">
                     <div slot="headline">Share instance</div>
                     <form slot="content" id="au-proceed" method="post" action="/Manage/AddShare">
-                        <md-outlined-text-field label="Discord Username" name="username" required maxlength="30"
-                            minlength="1" pattern="^[a-z0-9._]+$">
+                        <md-outlined-text-field
+                            label="Discord Username"
+                            name="username"
+                            required
+                            maxlength="32"
+                            minlength="2"
+                            pattern="^[a-z0-9._]+$"
+                            supporting-text="If the user does not exist, nothing will happen.">
                         </md-outlined-text-field>
                         <input type="hidden" name="instance" value="@instance.InstanceID">
                     </form>
