@@ -76,7 +76,13 @@
                         }
                         <div class="flex-h margin">
                             <label for="forward" class="margin">Port forwarding</label>
-                            <md-switch id="forward" value="forward" class="switch-hidden" switch-hidden="pfw-options" @selectF>
+                            <md-switch
+                                id="forward"
+                                name="forward"
+                                value="true"
+                                class="switch-hidden"
+                                switch-hidden="pfw-options"
+                                @selectF>
                             </md-switch>
                         </div>
                         <div id="pfw-options" @hide>
@@ -93,7 +99,7 @@
                                 </md-outlined-text-field>
                                 <div class="flex-h margin">
                                     <label for="public-port" class="margin">Public port</label>
-                                    <md-switch id="public-port" value="publicPort" @selectP>
+                                    <md-switch id="public-port" name="publicPort" value="true" @selectP>
                                     </md-switch>
                                 </div>
                             </div>

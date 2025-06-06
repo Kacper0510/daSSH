@@ -41,7 +41,12 @@
                         </md-outlined-text-field>
                         <div class="flex-h margin">
                             <label for="forward" class="margin">Port forwarding</label>
-                            <md-switch id="forward" value="forward" class="switch-hidden" switch-hidden="pfw-options">
+                            <md-switch
+                                id="forward"
+                                name="forward"
+                                value="true"
+                                class="switch-hidden"
+                                switch-hidden="pfw-options">
                             </md-switch>
                         </div>
                         <div id="pfw-options" hidden>
@@ -58,7 +63,7 @@
                                 </md-outlined-text-field>
                                 <div class="flex-h margin">
                                     <label for="public-port" class="margin">Public port</label>
-                                    <md-switch id="public-port" value="publicPort">
+                                    <md-switch id="public-port" name="publicPort" value="true">
                                     </md-switch>
                                 </div>
                             </div>
@@ -93,7 +98,7 @@
             }
             @foreach (var instance in Model.SharedInstances) {
                 <md-list-item>
-                    <md-icon slot="start">folder_shared</md-icon>
+                    <img src="@instance.Owner.Avatar" alt="Owner avatar" class="round" slot="start" />
                     <div slot="headline">@instance.Name</div>
                     <md-filled-icon-button slot="end" href="/Manage/Instance/@instance.InstanceID">
                         <md-icon>start</md-icon>

@@ -14,6 +14,7 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
         var user = await _db.Users
             .Include(u => u.Instances)
             .Include(u => u.SharedInstances)
+            .ThenInclude(i => i.Owner)
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.UserID == UserID());
         return View(user);
@@ -115,7 +116,7 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
             Name = name,
             Owner = user,
         };
-        _db.Instances.Add(instance);  // todo fix ports
+        _db.Instances.Add(instance);
         if (forward) {
             var portForward = new PortForward {
                 Port = port,
@@ -255,6 +256,7 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
         }  // TODO handle case where targetUser is the same as user
 
         var targetInstance = await _db.Instances
+            .Include(i => i.SharedUsers)
             .FirstOrDefaultAsync(i => i.InstanceID == instance);
         if (targetInstance == null) {
             return NotFound();
@@ -290,12 +292,13 @@ public class ManageController(DatabaseContext db) : ControllerExt(db) {
         }
 
         var targetInstance = await _db.Instances
+            .Include(i => i.SharedUsers)
             .FirstOrDefaultAsync(i => i.InstanceID == instance);
         if (targetInstance == null) {
             return NotFound();
         }
 
-        if (targetInstance.SharedUsers.Any(u => u.UserID == targetUser.UserID)) {  // todo check
+        if (targetInstance.SharedUsers.Any(u => u.UserID == targetUser.UserID)) {
             targetInstance.SharedUsers.Remove(targetUser);
             await _db.SaveChangesAsync();
         }
